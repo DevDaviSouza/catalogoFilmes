@@ -19,7 +19,7 @@ export async function salvarFilme(filme) {
 }
 
 //função que faz o select de filmes com base no nome.
-export async function consultarFilmes(nome) {
+export async function consultarFilmesPorNome(nome) {
   let comando = `
     SELECT id_filme         id,
            nm_filme         nome,
@@ -35,4 +35,73 @@ export async function consultarFilmes(nome) {
 
   //retorna a linha completa.
   return res[0];
+}
+
+export async function consultarFilmePorNome(nome) {
+  let comando = `
+    SELECT id_filme         id,
+           nm_filme         nome,
+           vl_avaliacao     avaliacao,
+           dt_lancamento    lancamento,
+           bt_disponivel    disponivel
+        FROM tb_filme
+        WHERE nm_filme = ?
+  `;
+  
+  //faz a formatação do nome para se adequar as normas do sql no momento da busca
+  let res = await con.query(comando, [nome]);
+
+  //retorna a linha completa.
+  return res[0];
+}
+
+//função que faz o select de filmes com base no id.
+export async function consultarFilmesPorId(id) {
+  let comando = `
+    SELECT id_filme         id,
+           nm_filme         nome,
+           ds_sinopse       sinopse,
+           vl_avaliacao     avaliacao,
+           dt_lancamento    lancamento,
+           bt_disponivel    disponivel,
+           img_filme        img
+        FROM tb_filme
+        WHERE id_filme = ?
+  `;
+  
+  //faz a formatação do nome para se adequar as normas do sql no momento da busca
+  let res = await con.query(comando, [id]);
+
+  //retorna a linha completa.
+  let registros = res[0];
+  return registros
+}
+
+export async function alterarFilme(filme, id) {
+  let comando = `
+        UPDATE tb_filme
+           SET nm_filme = ?,
+               ds_sinopse = ?,
+               vl_avaliacao = ?,
+               dt_lancamento = ?,
+               bt_disponivel = ?
+        WHERE id_filme = ?;
+  `
+  let res = await con.query(comando, [filme.nome, filme.sinopse, filme.avaliacao, filme.lancamento, filme.disponivel, id]);
+  let info = res[0];
+  let linhasAfetadas = info.affectedRows;
+
+  return linhasAfetadas;
+}
+
+export async function deletarFilme(id) {
+  let comando = `
+    DELETE FROM tb_filme WHERE id_filme = ?;
+  `
+
+  let res = await con.query(comando, [id]);
+  let info = res[0];
+  let linhasAfetadas = info.affectedRows;
+
+  return linhasAfetadas;
 }

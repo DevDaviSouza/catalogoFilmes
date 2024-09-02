@@ -1,4 +1,4 @@
-import { consultarFilmes } from "../../repository/filmeRepository.js";
+import { consultarFilmesPorNome } from "../../repository/filmeRepository.js";
 
 //função por trás do endpoint de consultar filmes
 export default async function consultarFilmesService(nome) {
@@ -6,6 +6,6 @@ export default async function consultarFilmesService(nome) {
   if(!nome) nome = ''
 
   //chama a função do repository que realiza a consulta no banco de dados e a retorna.
-  let registros = await consultarFilmes(nome);
+  let registros = await consultarFilmesPorNome(nome);
   return registros;
 }
